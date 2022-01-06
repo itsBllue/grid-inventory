@@ -4,12 +4,13 @@ import 'react-circular-progressbar/dist/styles.css';
 import {IoIosArrowDown,IoIosArrowUp} from 'react-icons/all';
 import NUI from "../../drivers/NUI";
 
-var debug = false; // If true shows the position of the pointers that check the blocks
+var debug = true; // If you want to see the display as it checks if there are other busy blocks in the radius
 
 const _items = [
-    {name : "Items 1", size_width : 2, size_height : 2},
-    {name : "Items 2", size_width : 2, size_height : 2},
-    {name : "Items 3", size_height : 1, size_height : 5},
+    {name : "Items 1", size_width : 2, size_height : 2, slot : 0},
+    {name : "Items 2", size_width : 2, size_height : 2, slot : 3},
+    {name : "Items 3", size_height : 1, size_height : 5, slot : 2},
+    {name : "Items 4", size_height : 1, size_height : 1, slot : 5},
 ]
 
 class Inventory extends Component {
@@ -38,25 +39,9 @@ class Inventory extends Component {
 class InventoryBlock extends Component {
     
     state = {
-        item_blocks : [...Array(this.props.amount)]
+        item_blocks : [...Array(this.props.amount)] // I'm too lazy to do it all manually, thanks to JS for this wonderful feature.
     }
 
-    #createBox = ({x,y,size_height,size_width, size}) => {
-        const box_elem = []
-        for (var h = 1; h <= size_height; h++) { // X - Width / Y - Height
-            for (var w = 1; w <= size_width; w++) {
-                const coords = {x : 0, y : 0};
-                coords.x = x + (w === 1 && 0.001 || (size * w - 20));
-                coords.y = y + (h === 1 && 0.001 || (size * h - 20));
-                const elem = this.#createElement({x : coords.x, y : coords.y})
-                box_elem.push(elem)
-            }
-        }
-        for (var i = 0; i < box_elem.length; i++) {
-            box_elem[i].remove()
-        }
-
-    }
 
     #findEmptySlot = (data) => {
         const {item_blocks} = this.state
@@ -153,11 +138,11 @@ class InventoryBlock extends Component {
                 const test = document.elementFromPoint(e.clientX, e.clientY)
                 const rect = test.getBoundingClientRect()
 
-                for (var h = 1; h <= data.size_height; h++) { // X - Width / Y - Height
-                    for (var w = 1; w <= data.size_width; w++) {
-                        const coords = {x : 0, y : 0};
+                for (var h = 1; h <= data.size_height; h++) { // X - Width / Y - Height / I'm on this math, fuck how long it took to come to it
+                    for (var w = 1; w <= data.size_width; w++) { // We create a new square, and on this square we check if the block is with the "item-block" class, if so, then it cannot be rearranged
+                        const coords = {x : 0, y : 0}; // By the way, I fucked my mouth with JS, why isn't Vector2 here?
                         let padding = 5
-                        coords.x = rect.x + (w === 1 && padding || (size * w - 30));
+                        coords.x = rect.x + (w === 1 && padding || (size * w - 30)); // And this is my great mathematics. It's better not to fucking touch, otherwise it might go all over the cunt
                         coords.y = rect.y + (h === 1 && padding || (size * h - 30));
                         get_coords.push(coords)
                         if (!_coords) _coords = coords;
@@ -211,9 +196,8 @@ class InventoryBlock extends Component {
     }
     componentDidMount() {
         Object.entries(this.props.items).map((el,i) => {
-            this.#addItem(i, el[1])
+            this.#addItem(el[1].slot || i, el[1])
         })
-        // this.#createBox({x : 100, y : 100, size_height : 2, size_width : 2, size : 50})
     }
 
     render() {
