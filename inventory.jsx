@@ -4,7 +4,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import {IoIosArrowDown,IoIosArrowUp} from 'react-icons/all';
 import NUI from "../../drivers/NUI";
 
-var debug = true; // If true shows the position of the pointers that check the blocks
+var debug = false; // If true shows the position of the pointers that check the blocks
 
 const _items = [
     {name : "Items 1", size_width : 2, size_height : 2},
