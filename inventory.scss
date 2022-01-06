@@ -1,0 +1,29 @@
+.inventory-drag-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: grid;
+    background-color: #1e1f21;
+    .block-wrapper {
+        width: 50px;
+        height: 50px;
+        border: .1px solid rgba(255, 255, 255, 0.281);
+        .block {
+            width: 50px;
+            height: 50px;
+            // position: absolute;
+        }
+        .item-block {
+            position: absolute;
+            background-repeat: no-repeat;
+            background-size: 50px 50px;
+            background-position: center;
+            border: .1px solid rgba(255, 0, 0, 0.281);
+        }
+    }
+}
